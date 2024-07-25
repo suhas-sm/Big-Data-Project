@@ -1,0 +1,23 @@
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col
+
+# Initialize Spark session
+spark = SparkSession.builder \
+    .appName("Enhanced Customer Purchase Analysis") \
+    .enableHiveSupport() \
+    .getOrCreate()
+
+# Load data from Hive tables
+customers_df = spark.sql("SELECT * FROM customers")
+products_df = spark.sql("SELECT * FROM products")
+transactions_df = spark.sql("SELECT * FROM transactions")
+
+# Data cleaning: Handle missing values and data types
+transactions_df = transactions_df.dropna()
+transactions_df = transactions_df.withColumn("amount", col("amount").cast("double"))
+transactions_df = transactions_df.withColumn("date", col("date").cast("date"))
+
+# Join dataframes to get complete transaction details
+complete_df = transactions_df \
+    .join(customers_df, "customer_id") \
+    .join(products_df, "product_id")
