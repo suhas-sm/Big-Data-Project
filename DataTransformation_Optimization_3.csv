@@ -26,3 +26,18 @@ complete_df = complete_df.repartition("customer_id")
 # Configuration tuning
 spark.conf.set("spark.sql.shuffle.partitions", "50")
 spark.conf.set("spark.executor.memory", "4g")
+
+# write aggregated data to hive tables 
+customer_purchase_df.write.mode("overwrite").saveAsTable("customer_purchase_summary")
+product_purchase_df.write.mode("overwrite").saveAsTable("product_sales_summary")
+
+
+# Query the Hive tables for analysis
+
+# Top customers by purchase amount
+top_customers = spark.sql("SELECT * FROM customer_purchase_summary ORDER BY total_purchase DESC LIMIT 10")
+top_customers.show()
+
+# Top products by sales amount
+top_products = spark.sql("SELECT * FROM product_sales_summary ORDER BY total_sales DESC LIMIT 10")
+top_products.show()
