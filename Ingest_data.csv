@@ -1,0 +1,37 @@
+# Ingest Data
+# Upload data to HDFS
+hdfs dfs -put customers.csv /suhas/data/customers.csv
+hdfs dfs -put products.csv /suhas/data/products.csv
+hdfs dfs -put transactions.csv /suhas/data/transactions.csv
+
+# Create Hive tables
+CREATE TABLE customers (
+    customer_id INT,
+    name STRING,
+    age INT,
+    city STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+CREATE TABLE products (
+    product_id INT,
+    product_name STRING,
+    category STRING,
+    price DOUBLE
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+CREATE TABLE transactions (
+    transaction_id INT,
+    customer_id INT,
+    product_id INT,
+    amount DOUBLE,
+    date STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
